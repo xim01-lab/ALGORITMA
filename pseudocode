@@ -1,0 +1,248 @@
+START  
+
+DEFINE kelas 'tuyo'   
+    STRING nama  
+    STRING alamat  
+    STRING namas  
+    STRING nomermm  
+    INTEGER harga  
+    INTEGER totals  
+    INTEGER bayar  
+END DEFINE  
+
+DEFINE ArrayList 'tio' untuk menyimpan objek 'tuyo'  
+
+DEFINE boolean 'masuk' = true  
+DEFINE Scanner 'input'  
+
+FUNCTION main:  
+    CALL macan()  
+
+FUNCTION macan:  
+    PRINT "++++++++++++++++++++++++++++++"  
+    PRINT "+++++++++++++++ BENGKEL ++++++++++++++"  
+    PRINT "+++++++++++++ SERVIS EVA +++++++++++++"  
+    PRINT "++++++++++++++++ MOTOR +++++++++++++++"  
+    PRINT "++++++++++++++++++++++++++++++"  
+    
+    WHILE masuk IS TRUE:  
+        CALL menu()  
+    END WHILE  
+END FUNCTION  
+
+FUNCTION menu:  
+    PRINT "================ MENU ================"  
+    PRINT "1. Show All Servis"  
+    PRINT "2. Isi Data"  
+    PRINT "3. Edit"  
+    PRINT "4. Hapus"  
+    PRINT "5. Cetak Data"  
+    PRINT "6. Total Pengeluaran Pelanggan"  
+    PRINT "7. Cetak Jasa Per Pelanggan"  
+    PRINT "8. Cetak Nota Pelanggan"  
+    PRINT "9. Selesai"  
+    PRINT "Pilih Menu:"  
+    
+    INTEGER pilih = READ input  
+
+    SWITCH pilih:  
+        CASE 1: CALL showall()   
+        CASE 2: CALL isiData()  
+        CASE 3: CALL edit()  
+        CASE 4: CALL hapus()  
+        CASE 5: CALL cetak()  
+        CASE 6: CALL totalPengeluaranPerPelanggan()  
+        CASE 7: CALL cetakJasaPerPelanggan()  
+        CASE 8: CALL cetakNotaPelanggan()  
+        CASE 9:   
+            PRINT "TERIMA KASIH"  
+            EXIT  
+        DEFAULT:  
+            PRINT "Pilihan Salah"  
+    END SWITCH  
+END FUNCTION  
+
+FUNCTION isiData:  
+    PRINT "Servis Motor"  
+    PRINT pilihan servis dari 1 hingga 7  
+
+    WHILE TRUE:  
+        PRINT "Nama = "  
+        STRING Nama = READ input  
+        PRINT "Plat motor = "  
+        STRING nomermm = READ input  
+        PRINT "Pilih servis: "  
+        INTEGER pilih = READ input  
+
+        SWITCH pilih:  
+            CASE 1: SET namas = "Ganti Oli"; SET harga = 90000  
+            CASE 2: SET namas = "Ganti ban"; SET harga = 250000  
+            CASE 3: SET namas = "Servis Lengkap"; SET harga = 60000  
+            CASE 4: SET namas = "Tune up"; SET harga = 350000  
+            CASE 5: SET namas = "Ganti Brake Shoe"; SET harga = 25000  
+            CASE 6: SET namas = "Ganti Brake Pad"; SET harga = 15000  
+            CASE 7: SET namas = "Turun Mesin"; SET harga = 150000  
+            DEFAULT: PRINT "Pilihan Salah"; CONTINUE  
+
+        totals += harga  
+        ADD new tuyo(Nama, nomermm, namas, harga, totals, bayar) TO tio  
+
+        PRINT "Data lagi Y/T: "  
+        STRING jawab = READ input  
+        IF jawab EQUALS "T":  
+            BREAK  
+    END WHILE  
+END FUNCTION  
+
+FUNCTION showall:  
+    PRINT "Show All Servis"  
+    IF tio IS EMPTY:  
+        PRINT "Belum Ada Data"  
+    ELSE:  
+        PRINT header kolom  
+        FOR i FROM 0 TO size of tio:  
+            tiyo dan = tio.get(i)  
+            PRINT data dari 'dan'  
+        END FOR  
+    END IF  
+END FUNCTION  
+
+FUNCTION cetakNotaPelanggan:  
+    IF tio IS EMPTY:  
+        PRINT "Belum Ada Data"  
+        RETURN  
+    END IF  
+
+    PRINT "Masukkan Nama Pelanggan: "  
+    STRING namaPelanggan = READ input  
+
+    DEFINE List 'jasaPelanggan'  
+    FOR each servis IN tio:  
+        IF servis.nama EQUALS namaPelanggan:  
+            ADD servis TO jasaPelanggan  
+        END IF  
+    END FOR  
+
+    IF jasaPelanggan IS EMPTY:  
+        PRINT "Tidak ada data untuk pelanggan dengan nama " + namaPelanggan  
+        RETURN  
+    END IF  
+
+    PRINT "Nota Servis"  
+    PRINT "Nama Pelanggan : " + namaPelanggan  
+    PRINT header nota  
+    
+    INTEGER subtotal = 0  
+    FOR i FROM 0 TO size of jasaPelanggan:  
+        tiyo servis = jasaPelanggan.get(i)  
+        PRINT data dari 'servis'  
+        subtotal += servis.harga  
+    END FOR  
+
+    PRINT subtotal  
+    PRINT "TERIMA KASIH ATAS KUNJUNGAN ANDA!"  
+END FUNCTION  
+
+FUNCTION totalPengeluaranPerPelanggan:  
+    DEFINE Map pengeluaranMap  
+
+    FOR each servis IN tio:  
+        pengeluaranMap[servis.nama] += servis.harga  
+    END FOR  
+
+    PRINT "Total Pengeluaran Pelanggan:"  
+    FOR each entry IN pengeluaranMap:  
+        PRINT "Nama: " + entry.key + ", Total Pengeluaran: Rp " + entry.value  
+    END FOR  
+END FUNCTION  
+
+FUNCTION cetakJasaPerPelanggan:  
+    DEFINE Map jasaMap  
+
+    FOR each servis IN tio:  
+        jasaMap[servis.nama].ADD(servis.namas)  
+    END FOR  
+
+    PRINT "Jasa Per Pelanggan:"  
+    FOR each entry IN jasaMap:  
+        PRINT entry.key  
+        PRINT "Jasa yang Digunakan:"  
+        FOR each jasa IN entry.value:  
+            PRINT jasa  
+        END FOR  
+    END FOR  
+END FUNCTION  
+
+FUNCTION edit:  
+    IF tio IS EMPTY:  
+        PRINT "BELUM ADA DATA"  
+        RETURN  
+    END IF  
+
+    CALL showall()  
+    PRINT "Masukkan nomor data yang ingin diubah: "  
+    
+    INTEGER nomor = READ input  
+    IF nomor IS INVALID:  
+        PRINT "Nomor tidak valid."  
+        RETURN  
+    END IF  
+
+    tiyo dataEdit = tio.get(nomor - 1)  
+    PRINT "Masukkan nama baru: "  
+    STRING namaBaru = READ input  
+    IF namaBaru IS NOT EMPTY:  
+        dataEdit.nama = namaBaru  
+    END IF  
+
+    PRINT "Masukkan Plat Nomor: "  
+    STRING nomerMotorBaru = READ input  
+    IF nomerMotorBaru IS NOT EMPTY:  
+        dataEdit.alamat = nomerMotorBaru  
+    END IF  
+END FUNCTION  
+
+FUNCTION hapus:  
+    IF tio IS EMPTY:  
+        PRINT "Belum Ada Data"  
+        RETURN  
+    END IF  
+
+    CALL showall()  
+    PRINT "Masukkan Nomer: "  
+    
+    INTEGER masukan = READ input  
+    IF masukan IS VALID:  
+        REMOVE tio[masukan - 1]  
+        PRINT "Telah dihapus"  
+    ELSE:  
+        PRINT "Nomor tidak valid"  
+    END IF  
+END FUNCTION  
+
+FUNCTION cetak:  
+    INTEGER halaman = 3  
+    INTEGER totalpage = CEILING(size of tio / halaman)  
+    DOUBLE totalgrand = 0  
+
+    IF tio IS EMPTY:  
+        PRINT "BELUM ADA DATA"  
+    ELSE:  
+        FOR apap FROM 1 TO totalpage:  
+            PRINT "Halaman " + apap  
+            DOUBLE subtotal = 0  
+            FOR i FROM (apap - 1) * halaman TO minimum(apap * halaman, size of tio):  
+                tiyo servis = tio.get(i)  
+                PRINT data dari 'servis'  
+                subtotal += servis.harga  
+            END FOR  
+            PRINT subtotal  
+            totalgrand += subtotal  
+            IF apap IS LAST_PAGE:  
+                PRINT "Grand Total: " + totalgrand  
+            END IF  
+        END FOR  
+    END IF  
+END FUNCTION  
+
+END
