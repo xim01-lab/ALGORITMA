@@ -1,0 +1,306 @@
+package coba;
+
+import java.util.*;
+
+public class tugasAkhir {
+
+    // Menyimpan daftar data servis
+    public static ArrayList<tiyo> tio = new ArrayList<>();
+    static boolean masuk = true;
+    static Scanner input = new Scanner(System.in);
+
+    // Kelas untuk menyimpan data servis
+    static class tiyo {
+        String nama, alamat, namas, nomermm;
+        int harga, totals, bayar;
+
+        tiyo(String Nama, String alamat, String namas, int harga, int totals, int bayar) {
+            this.nama = Nama;
+            this.alamat = alamat;
+            this.harga = harga;
+            this.totals = totals;
+            this.namas = namas;
+            this.bayar = bayar;
+        }
+    }
+
+    public static void main(String[] args) {
+        macan();
+    }
+
+    private static void macan() {
+        System.out.println("++++++++++++++++++++++++++++++++++++++");
+        System.out.println("+++++++++++++++ BENGKEL ++++++++++++++");
+        System.out.println("+++++++++++++ SERVIS EVA +++++++++++++");
+        System.out.println("++++++++++++++++ MOTOR +++++++++++++++");
+        System.out.println("++++++++++++++++++++++++++++++++++++++");
+        do {
+            menu();
+        } while (masuk);
+    }
+
+    static void menu() {
+        System.out.println("================ MENU ================");
+        System.out.println("1. Show All Servis");
+        System.out.println("2. Isi Data");
+        System.out.println("3. Edit");
+        System.out.println("4. Hapus");
+        System.out.println("5. Cetak Data");
+        System.out.println("6. Total Pengeluaran Pelanggan");
+        System.out.println("7. Cetak Jasa Per Pelanggan");
+        System.out.println("8. Cetak Nota Pelanggan");
+        System.out.println("9. Selesai");
+        System.out.print("Pilih Menu : ");
+        int pilih = input.nextInt();
+        switch (pilih) {
+            case 1:
+                showall();
+                break;
+            case 2:
+                isiData();
+                break;
+            case 3:
+                edit();
+                break;
+            case 4:
+                hapus();
+                break;
+            case 5:
+                cetak();
+                break;
+            case 6:
+                totalPengeluaranPerPelanggan();
+                break;
+            case 7:
+                cetakJasaPerPelanggan();
+                break;
+            case 8:
+                cetakNotaPelanggan();
+                break;
+            case 9:
+                System.out.println("TERIMA KASIH");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Pilihan Salah");
+        }
+    }
+
+    static void isiData() {
+        String namas = "", jawab = "", Nama = "", nomermm = "";
+        int harga = 0, pilih = 0, totals = 0, bayar = 0;
+
+        System.out.println("\nServis Motor ");
+        System.out.println("[1]. Ganti Oli");
+        System.out.println("[2]. Ganti ban");
+        System.out.println("[3]. Servis Lengkap ");
+        System.out.println("[4]. Tune Up");
+        System.out.println("[5]. Ganti Brake Shoe");
+        System.out.println("[6]. Ganti Brake Pad");
+        System.out.println("[7]. Turun Mesin");
+
+        while (true) {
+            System.out.print("Nama = ");
+            Nama = input.next();
+            System.out.print("Plat motor = ");
+            nomermm = input.next();
+            System.out.print("Pilih : ");
+            pilih = input.nextInt();
+
+            switch (pilih) {
+                case 1:
+                    namas = " Ganti Oli ";
+                    harga = 90000;
+                    break;
+                case 2:
+                    namas = " Ganti ban";
+                    harga = 250000;
+                    break;
+                case 3:
+                    namas = " Servis Lengkap ";
+                    harga = 60000;
+                    break;
+                case 4:
+                    namas = " Tune up ";
+                    harga = 350000;
+                    break;
+                case 5:
+                    namas = " Ganti Brake Shoe ";
+                    harga = 25000;
+                    break;
+                case 6:
+                    namas = " Ganti Brake Pad ";
+                    harga = 15000;
+                    break;
+                case 7:
+                    namas = " Turun Mesin ";
+                    harga = 150000;
+                    break;
+                default:
+                    System.out.println("Pilihan Salah");
+                    continue;
+            }
+
+            totals += harga;
+            tio.add(new tiyo(Nama, nomermm, namas, harga, totals, bayar));
+
+            System.out.print("Data lagi Y/T : ");
+            jawab = input.next();
+            if (jawab.equalsIgnoreCase("T")) {
+                break;
+            }
+        }
+    }
+
+    static void showall() {
+        System.out.println("Show All Servis ");
+        if (tio.isEmpty()) {
+            System.out.println("Belum Ada Data ");
+        } else {
+            System.out.println("=========================================");
+            System.out.printf("|%-5s|%-12s|%-20s|%-20s|\n", "No", "Nama", "Plat Nomor", "Nama Servis");
+            for (int i = 0; i < tio.size(); i++) {
+                tiyo dan = tio.get(i);
+                System.out.printf("|%-5d|%-12s|%-20s|%-20s|\n", i + 1, dan.nama, dan.alamat, dan.namas);
+            }
+        }
+    }
+
+    static void cetakNotaPelanggan() {
+        if (tio.isEmpty()) {
+            System.out.println("Belum Ada Data");
+            return;
+        }
+        System.out.print("Masukkan Nama Pelanggan: ");
+        input.nextLine(); // Clear buffer
+        String namaPelanggan = input.nextLine();
+
+        List<tiyo> jasaPelanggan = new ArrayList<>();
+        for (tiyo servis : tio) {
+            if (servis.nama.equalsIgnoreCase(namaPelanggan)) {
+                jasaPelanggan.add(servis);
+            }
+        }
+
+        if (jasaPelanggan.isEmpty()) {
+            System.out.println("Tidak ada data untuk pelanggan dengan nama " + namaPelanggan);
+            return;
+        }
+
+        int subtotal = 0;
+        System.out.println("=========================================");
+        System.out.println("               NOTA SERVIS               ");
+        System.out.println("=========================================");
+        System.out.println("Nama Pelanggan : " + namaPelanggan);
+        System.out.printf("%-5s|%-12s|%-20s|%-10s\n", "No", "Plat Nomor", "Nama Servis", "Harga");
+        System.out.println("-----------------------------------------");
+        for (int i = 0; i < jasaPelanggan.size(); i++) {
+            tiyo servis = jasaPelanggan.get(i);
+            System.out.printf("%-5d|%-12s|%-20s|Rp %,10d\n", i + 1, servis.alamat, servis.namas, servis.harga);
+            subtotal += servis.harga;
+        }
+        System.out.println("-----------------------------------------");
+        System.out.printf("Subtotal: Rp %,d\n", subtotal);
+        System.out.println("=========================================");
+        System.out.println("TERIMA KASIH ATAS KUNJUNGAN ANDA!");
+    }
+
+    static void totalPengeluaranPerPelanggan() {
+        Map<String, Integer> pengeluaranMap = new HashMap<>();
+        for (tiyo servis : tio) {
+            pengeluaranMap.put(servis.nama, pengeluaranMap.getOrDefault(servis.nama, 0) + servis.harga);
+        }
+        System.out.println("=========================================");
+        System.out.println("Total Pengeluaran Pelanggan:");
+        for (Map.Entry<String, Integer> entry : pengeluaranMap.entrySet()) {
+            System.out.printf("Nama: %s, Total Pengeluaran: Rp %,d\n", entry.getKey(), entry.getValue());
+        }
+    }
+
+    static void cetakJasaPerPelanggan() {
+        Map<String, List<String>> jasaMap = new HashMap<>();
+        for (tiyo servis : tio) {
+            jasaMap.computeIfAbsent(servis.nama, k -> new ArrayList<>()).add(servis.namas);
+        }
+        System.out.println("=========================================");
+        System.out.println("Jasa Per Pelanggan:");
+        for (Map.Entry<String, List<String>> entry : jasaMap.entrySet()) {
+            System.out.printf("Nama: %s\n", entry.getKey());
+            System.out.println("Jasa yang Digunakan:");
+            for (String jasa : entry.getValue()) {
+                System.out.println(" - " + jasa);
+            }
+            System.out.println("-----------------------------------------");
+        }
+    }
+
+    static void edit() {
+        if (tio.isEmpty()) {
+            System.out.println("BELUM ADA DATA ");
+            return;
+        }
+        showall();
+        System.out.print("Masukkan nomor data yang ingin diubah : ");
+        int nomor = input.nextInt();
+        if (nomor < 1 || nomor > tio.size()) {
+            System.out.println("Nomor tidak valid. Silakan coba lagi.");
+            return;
+        }
+
+        tiyo dataEdit = tio.get(nomor - 1);
+        System.out.print("Masukkan nama baru = ");
+        input.nextLine(); // Clear buffer
+        String namaBaru = input.nextLine();
+        if (!namaBaru.isEmpty()) {
+            dataEdit.nama = namaBaru;
+        }
+        System.out.print("Masukkan Plat Nomor = ");
+        String nomerMotorBaru = input.nextLine();
+        if (!nomerMotorBaru.isEmpty()) {
+            dataEdit.alamat = nomerMotorBaru;
+        }
+    }
+
+    static void hapus() {
+        if (tio.isEmpty()) {
+            System.out.println("Belum Ada Data ");
+            return;
+        }
+        showall();
+        System.out.print("Masukkan Nomer = ");
+        int masukan = input.nextInt();
+        if (masukan >= 1 && masukan <= tio.size()) {
+            tio.remove(masukan - 1);
+            System.out.println("Telah dihapus");
+        } else {
+            System.out.println("Nomor tidak valid");
+        }
+    }
+
+    static void cetak() {
+        int halaman = 3;
+        final int totalpage = (int) Math.ceil((double) tio.size() / halaman);
+        double totalgrand = 0;
+
+        if (tio.isEmpty()) {
+            System.out.println("BELUM ADA DATA");
+        } else {
+            for (int apap = 1; apap <= totalpage; apap++) {
+                System.out.println("===============================================");
+                System.out.printf("Halaman %d dari %d\n", apap, totalpage);
+                double subtotal = 0;
+                for (int i = (apap - 1) * halaman; i < Math.min(apap * halaman, tio.size()); i++) {
+                    tiyo servis = tio.get(i);
+                    System.out.printf("|%-5d|%-12s|%-20s|%-20s|%-20d|\n", i + 1, servis.nama, servis.alamat, servis.namas, servis.harga);
+                    subtotal += servis.harga;
+                }
+                System.out.println("===============================================");
+                System.out.printf("Subtotal Halaman %d: Rp %,.0f\n", apap, subtotal);
+                totalgrand += subtotal;
+                if (apap == totalpage) {
+                    System.out.printf("Grand Total: Rp %,.0f\n", totalgrand);
+                }
+            }
+        }
+    }
+}
